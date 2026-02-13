@@ -20,4 +20,4 @@ Having an instance of the class in a global variable seems like an easy way to m
 1. make constructor private
 2. a static method to get the instance
 
-For a multithreaded environment, employ double checking mechanism
+For a multithreaded environment, employ double-checking mechanism
