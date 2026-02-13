@@ -22,10 +22,21 @@ Client objects need not know the concrete classes.
 
 
 ### Deep dive
+Example 1:
+
 JDBC driver
 
 Each driver contains a class that implements a connection, statement and resultset.
 Now we have 1+n providers, oracle, postgres, mysql etc...
 
 Goal: Client code shouldn’t about  how Postgres, MySQL, or Oracle implements those interfaces.
+
+Example 2:
+Customer data management system.
+
+Functional requirements.
+1. Validate and save input data(account, address, credit card)
+2. function in both local and remote modes.
+3. In remote mode, use REST api and save data to remote central server
+
 
