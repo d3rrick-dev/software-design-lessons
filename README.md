@@ -19,3 +19,4 @@ How objects are structured and connected.
 2. [Chain of Responsibility](src/structural/chainofresponsibility/Chain.md)
 3. [Facade](src/structural/facade/Facade.md)
 4. [Proxy](src/structural/proxy/Proxy.md)
+5. [Bridge](src/structural/bridge/Bridge.md)
