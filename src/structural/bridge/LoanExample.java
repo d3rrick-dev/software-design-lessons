@@ -4,6 +4,9 @@ void main() {
 
     var loan2 = new BusinessLoan(new BankTransferProvider());
     loan2.processLoan(200000);
+
+    var loan3 = new BusinessLoan(new CryptoTransferProvider());
+    loan3.processLoan(200000);
 }
 
 // Payments
@@ -20,6 +23,12 @@ static class MpesaProvider implements PaymentProvider {
 static class BankTransferProvider implements PaymentProvider {
     public void pay(double amount) {
         System.out.println("Processing via Bank: " + amount);
+    }
+}
+
+static class CryptoTransferProvider implements PaymentProvider {
+    public void pay(double amount) {
+        System.out.println("Processing via Crypto: " + amount);
     }
 }
 

@@ -63,3 +63,45 @@ From [example](LoanExample.java)
  - Loan hierarchy varies independently
  - PaymentProvider hierarchy varies independently
  - They are connected by composition (the “bridge”)
+
+
+Quiz 1.
+Supporse I want to extend, say 
+```
+If loan < 1000 → Mpesa
+If loan > 1000 → Bank
+```
+**Bad code.**
+Because now Loan knows concrete providers again.
+Broken decoupling.
+```java
+void processLoan(double amount) {
+    if (amount < 1000) {
+        new MpesaProvider().pay(amount);
+    } else {
+        new BankTransferProvider().pay(amount);
+    }
+}
+```
+
+**Fixing**
+Introduce a selector (this is where Strategy or a simple factory fits).
+```java
+class PaymentProviderSelector {
+
+    public PaymentProvider select(double amount) {
+        if (amount < 1000) {
+            return new MpesaProvider();
+        }
+        return new BankTransferProvider();
+    }
+}
+
+//Usage
+PaymentProviderSelector selector = new PaymentProviderSelector();
+PaymentProvider provider = selector.select(amount);
+
+Loan loan = new PersonalLoan(provider);
+loan.processLoan(amount);
+```
+
