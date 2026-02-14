@@ -16,5 +16,6 @@ Learning design patterns
 #### Structural
 How objects are structured and connected.
 1. [Decorator](src/structural/decorator/Decorator.md)
-1. [Chain of Responsibility](src/structural/chainofresponsibility/Chain.md)
-1. [Facade](src/structural/facade/Facade.md)
+2. [Chain of Responsibility](src/structural/chainofresponsibility/Chain.md)
+3. [Facade](src/structural/facade/Facade.md)
+4. [Proxy](src/structural/proxy/Proxy.md)
