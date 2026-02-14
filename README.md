@@ -22,3 +22,4 @@ Learning design patterns
 
 #### Behavioral - How objects communicate, interact, and share responsibilities.
 1. [Command](src/behavioral/command/Command.md) - Encapsulates a request as an object.
+2. [Mediator](src/behavioral/mediator/Mediator.md) - A mediator coordinated objects interaction.
