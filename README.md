@@ -13,3 +13,6 @@ Learning design patterns
 3. [Flyweight](src/collectional/flyweight/Flyweight.md)
 4. [Visitor](src/collectional/visitor/Visitor.md)
 
+#### Structural
+How objects are structured and connected.
+1. [Decorator](src/structural/decorator/Decorator.md)
