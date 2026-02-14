@@ -9,6 +9,7 @@ Learning design patterns
 
 #### Collectional patterns
 1. [Iterator](src/collectional/iterator/Iterator.md)
-1. [Composite](src/collectional/composite/Composite.md)
-1. [Flyweight](src/collectional/flyweight/Flyweight.md)
+2. [Composite](src/collectional/composite/Composite.md)
+3. [Flyweight](src/collectional/flyweight/Flyweight.md)
+4. [Visitor](src/collectional/visitor/Visitor.md)
 
