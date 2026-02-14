@@ -1,14 +1,30 @@
 
-**Decorator - f(g(h(x)))**  
-
+**Decorator - f(g(h(x)))**
 changes the structure of the ovbject graph.
 Like building a layered structure
+
+Outer -> Inner -> Inner -> Base
+
+There is one core behavior being enhanced.
+
+It is expected to preserve the same **interface** contract.
+**It only guarantees structural wrapping.**
+    1. Same interface as the wrapped object
+    2. Delegation to the wrapped object
+    3.Optional added behavior before/after delegation
 
 **It’s about:**
  * Wrapping
  * Composing
  * Building object layers
  * Maintaining the same interface
+
+**Decorator it's allowed to:**
+ * Throw exceptions
+ * Modify inputs
+ * Short-circuit execution
+ * Log and abort
+ * Transform results
 
 **Example**
 ```

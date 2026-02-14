@@ -37,6 +37,7 @@ public abstract class LoanProcessorDecorator implements LoanProcessor {
 // could involve calling external API
 public class FraudCheckDecorator extends LoanProcessorDecorator {
     public FraudCheckDecorator(LoanProcessor processor) {
+        IO.println("Fraud check decorator");
         super(processor);
     }
 
@@ -56,6 +57,7 @@ public class FraudCheckDecorator extends LoanProcessorDecorator {
 public class ComplianceDecorator extends LoanProcessorDecorator {
 
     public ComplianceDecorator(LoanProcessor processor) {
+        IO.println("Compliance check decorator");
         super(processor);
     }
 
