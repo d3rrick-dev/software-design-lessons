@@ -33,6 +33,7 @@ Split into two:
 **Example:**
 1. Notifications
 2. Loan service
+3. JDBC
 
 **we have loan types**
  - PersonalLoan
@@ -110,3 +111,41 @@ Suppose we want to split payments 70/30
 > Introduce a class to handle Splitting and send to each payment provider this is
 extending the behavior by adding a new implementation.
 
+**Example 3**
+
+**JDBC**
+How do you allow any Java application to talk to any database without recompiling the application or the database?
+
+- If JDBC used inheritance, you’d have classes like **MySqlConnection**, **PostgreSqlConnection**, and **OracleConnection**. 
+- Your code would be tightly coupled to a specific database vendor.
+
+Instead, JDBC separates the **Abstraction** (what the programmer uses) from the **Implementation** (what the database vendor provides).
+
+**1. The Abstraction (The java.sql API)**
+```java
+java.sql.Connection;
+java.sql.Statement;
+java.sql.ResultSet;
+```
+
+**2. The Implementation (The JDBC Driver)**
+These are the low-level classes provided by vendors (MySQL, Oracle, PostgreSQL). They implement the interfaces above but contain the messy, socket-level protocol logic specific to that database.
+```java
+com.mysql.cj.jdbc.ConnectionImpl;
+org.postgresql.jdbc.PgConnection;
+```
+
+**Putting them together:**
+```java
+// 1. The Client (Abstraction side)
+// We only ever deal with the INTERFACE 'Connection'
+Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/ezra", "user", "pass");
+
+// 2. The Implementation side (Under the hood)
+// The DriverManager found the MySQL Driver and returned a 'com.mysql...ConnectionImpl'
+// object, but cast it to the 'java.sql.Connection' interface.
+
+// 3. Using the Bridge
+// When you call .createStatement(), the Abstraction calls the Implementation.
+Statement stmt = conn.createStatement();
+```
