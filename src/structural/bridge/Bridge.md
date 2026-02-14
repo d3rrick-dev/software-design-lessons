@@ -105,3 +105,8 @@ Loan loan = new PersonalLoan(provider);
 loan.processLoan(amount);
 ```
 
+Quiz 2.
+Suppose we want to split payments 70/30
+> Introduce a class to handle Splitting and send to each payment provider this is
+extending the behavior by adding a new implementation.
+
