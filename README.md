@@ -20,5 +20,5 @@ Learning design patterns
 4. [Proxy](src/structural/proxy/Proxy.md) - Controls access to another object, optionally adding extra behavior (lazy loading, security, logging).
 5. [Bridge](src/structural/bridge/Bridge.md) - Decouple abstraction from implementation so the two can vary independently
 
-#### Behavioral
-1. [Command](src/behavioral/command/Command.md)
+#### Behavioral - How objects communicate, interact, and share responsibilities.
+1. [Command](src/behavioral/command/Command.md) - Encapsulates a request as an object.
