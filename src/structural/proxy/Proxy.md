@@ -13,3 +13,17 @@ It implements the same interface as the real object, so clients don’t know the
 2.	**Protection Proxy** – controls access (permissions, validation)
 3.	**Remote Proxy** – represents an object in another address space (RPC, microservices)
 4.	**Cache / Smart Proxy** – caches expensive calls, adds logging, metrics
+
+
+**N.B**
+**Decorator** = “Enhancer” → adds new behavior
+**Proxy** = "Gatekeeper / Manager" → controls when or if real object is accessed
+
+```java
+// combo
+// Proxy: lazy loads the image
+// Decorator: logs usage
+
+Image img = new LoggingDecorator(new ImageProxy("photo.jpg"));
+img.display();
+```
