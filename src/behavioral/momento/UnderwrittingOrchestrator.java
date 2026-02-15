@@ -61,6 +61,7 @@ public static class UnderwritingOriginator {
                     ));
 
     // ---- Business Steps ----
+
     public void validateIdentity() {
         if (isCompleted(UnderwritingStep.KYC)) return;
 
@@ -70,6 +71,8 @@ public static class UnderwritingOriginator {
         stepStatuses.put(UnderwritingStep.KYC, StepStatus.COMPLETED);
     }
 
+    // use facade pattern like CreditProviderFacade
+    // just give me a score, I do not care from where
     public void fetchCreditScore() {
         if (isCompleted(UnderwritingStep.CREDIT_BUREAU)) return;
 
@@ -150,6 +153,7 @@ public static class UnderwritingOriginator {
 
 
 // momento
+// instead of serializable use Jackson or use Protobuf.
 public record UnderwritingMemento(
         String internalScore,
         List<String> verifiedAttributes,
