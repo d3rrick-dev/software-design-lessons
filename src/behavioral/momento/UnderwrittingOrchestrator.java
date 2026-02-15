@@ -1,4 +1,5 @@
 void main() {
+
     var correlationId = "loan-123";
     var caretaker = new InMemoryStateCaretaker();
     var originator = new UnderwritingOriginator();
@@ -21,72 +22,128 @@ void main() {
         IO.println("System crashed. Recovering from checkpoint...");
         var snapshot = caretaker.get(correlationId);
 
-        // New instance (simulating new pod)
         var recovered = new UnderwritingOriginator();
         recovered.restore(snapshot);
 
-        // Resume execution
-        if (recovered.getCurrentStep() < 3) {
-            recovered.runRiskModel();
-            caretaker.save(correlationId, recovered.checkpoint());
-        }
-        recovered.approveLoan();
+        // Resume intelligently
+        recovered.resume();
+
+        caretaker.save(correlationId, recovered.checkpoint());
     }
 }
 
+
+public enum UnderwritingStep {
+    KYC,
+    CREDIT_BUREAU,
+    RISK_MODEL,
+    FINAL_DECISION
+}
+
+public enum StepStatus {
+    NOT_STARTED,
+    IN_PROGRESS,
+    COMPLETED,
+    FAILED
+}
 // originator
 public static class UnderwritingOriginator {
     private String internalScore;
     private List<String> verifiedAttributes = new ArrayList<>();
     private double preliminaryLimit;
-    private int currentStep = 0;
+    private final Map<UnderwritingStep, StepStatus> stepStatuses =
+            Arrays.stream(UnderwritingStep.values())
+                    .collect(Collectors.toMap(
+                            step -> step,
+                            step -> StepStatus.NOT_STARTED,
+                            (a,b) -> a,
+                            () -> new EnumMap<>(UnderwritingStep.class)
+                    ));
 
     // ---- Business Steps ----
     public void validateIdentity() {
+        if (isCompleted(UnderwritingStep.KYC)) return;
+
+        stepStatuses.put(UnderwritingStep.KYC, StepStatus.IN_PROGRESS);
         IO.println("Calling KYC provider...");
         verifiedAttributes.add("identity_verified");
-        currentStep = 1;
+        stepStatuses.put(UnderwritingStep.KYC, StepStatus.COMPLETED);
     }
 
     public void fetchCreditScore() {
+        if (isCompleted(UnderwritingStep.CREDIT_BUREAU)) return;
+
+        stepStatuses.put(UnderwritingStep.CREDIT_BUREAU, StepStatus.IN_PROGRESS);
         IO.println("Calling Credit Bureau...");
         internalScore = "CREDIT_720";
-        currentStep = 2;
+        stepStatuses.put(UnderwritingStep.CREDIT_BUREAU, StepStatus.COMPLETED);
     }
 
     // Assuming it could crash
     // or async, I have to wait for results
     public void runRiskModel() {
+        if (isCompleted(UnderwritingStep.RISK_MODEL)) return;
+
+        stepStatuses.put(UnderwritingStep.RISK_MODEL, StepStatus.IN_PROGRESS);
         IO.println("Running Risk Model...");
         preliminaryLimit = 5000.0;
-        currentStep = 3;
+        stepStatuses.put(UnderwritingStep.RISK_MODEL, StepStatus.COMPLETED);
     }
 
     public void approveLoan() {
+        if (isCompleted(UnderwritingStep.FINAL_DECISION)) return;
+
+        stepStatuses.put(UnderwritingStep.FINAL_DECISION, StepStatus.IN_PROGRESS);
         IO.println("Loan Approved with limit: " + preliminaryLimit);
-        currentStep = 4;
+        stepStatuses.put(UnderwritingStep.FINAL_DECISION, StepStatus.COMPLETED);
+    }
+
+    private boolean isCompleted(UnderwritingStep step) {
+        return stepStatuses.get(step) == StepStatus.COMPLETED;
     }
 
     // ---- Memento Operations ----
     public UnderwritingMemento checkpoint() {
         return new UnderwritingMemento(
                 internalScore,
-                verifiedAttributes,
+                new ArrayList<>(verifiedAttributes),
                 preliminaryLimit,
-                currentStep
+                new EnumMap<>(stepStatuses)
         );
+    }
+
+    // ----------------------------
+    // Resume Logic (Reconciliation)
+    // ----------------------------
+
+    public void resume() {
+
+        if (!isCompleted(UnderwritingStep.KYC)) {
+            validateIdentity();
+        }
+
+        if (!isCompleted(UnderwritingStep.CREDIT_BUREAU)) {
+            fetchCreditScore();
+        }
+
+        if (!isCompleted(UnderwritingStep.RISK_MODEL)) {
+            runRiskModel();
+        }
+
+        if (!isCompleted(UnderwritingStep.FINAL_DECISION)) {
+            approveLoan();
+        }
     }
 
     public void restore(UnderwritingMemento memento) {
         this.internalScore = memento.internalScore();
         this.verifiedAttributes = new ArrayList<>(memento.verifiedAttributes());
         this.preliminaryLimit = memento.preliminaryLimit();
-        this.currentStep = memento.currentStep();
+        this.stepStatuses.clear();
+        this.stepStatuses.putAll(memento.stepStatuses());
     }
 
-    public int getCurrentStep() {
-        return currentStep;
-    }
+
 }
 
 
@@ -95,9 +152,8 @@ public record UnderwritingMemento(
         String internalScore,
         List<String> verifiedAttributes,
         double preliminaryLimit,
-        int currentStep
+        Map<UnderwritingStep, StepStatus> stepStatuses
 ) implements Serializable {}
-
 
 public static class InMemoryStateCaretaker {
     private final Map<String, UnderwritingMemento> store = new HashMap<>();
