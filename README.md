@@ -23,3 +23,4 @@ Learning design patterns
 #### Behavioral - How objects communicate, interact, and share responsibilities.
 1. [Command](src/behavioral/command/Command.md) - Encapsulates a request as an object.
 2. [Mediator](src/behavioral/mediator/Mediator.md) - A mediator coordinated objects interaction.
+3. [Momento](src/behavioral/momento/Momento.md) - Used to capture and save an object's internal state—a "snapshot" without violating encapsulation, allowing the object to be restored to this state later
