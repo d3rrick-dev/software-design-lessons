@@ -137,13 +137,15 @@ public static class UnderwritingOriginator {
 
     public void restore(UnderwritingMemento memento) {
         this.internalScore = memento.internalScore();
+        // Defensive Copy
         this.verifiedAttributes = new ArrayList<>(memento.verifiedAttributes());
         this.preliminaryLimit = memento.preliminaryLimit();
+        // avoid mutation of the existing list
+        // remove current entities
         this.stepStatuses.clear();
+        // copy a snapshot
         this.stepStatuses.putAll(memento.stepStatuses());
     }
-
-
 }
 
 

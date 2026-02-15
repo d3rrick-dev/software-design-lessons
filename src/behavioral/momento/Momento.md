@@ -43,3 +43,31 @@ Memento is about preserving computational progress.
  * Avoiding re-costing
  * Avoiding latency regression
  * Maintaining distributed resilience
+
+**Challenges:**
+- Schema evolution, may lead to failures when a snap is saved on a different version and restored with a different one.
+
+**Mementos must be designed to be:**
+- Backward compatible 
+- Forward compatible
+
+**How:**
+- version field in memento
+- Json with torrerant deselialization, i.e `@JsonIgnoreProperties(ignoreUnknown = true)`
+- Default values
+- Use protobufs
+
+**Safe evolution pattern:**
+ * Add fields
+ * Never remove
+ * Never rename
+ * Keep old fields deprecated
+
+Why using serializable is not great: `implements Serializable`
+
+**In production it's fragile because:**
+ - Class name changes break deserialization
+ - Field changes break deserialization
+ - serialVersionUID mismatches crash restore
+ - Hard to debug
+ - Not language-agnostic
